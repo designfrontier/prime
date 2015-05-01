@@ -1,16 +1,10 @@
 var primeRegex = /^1?$|^(11+?)\1+$/
     , isPrime = function (num, regex) {
-        var one = '1'
-            , i = 0
-            , testString = '';
+        'use strict';
 
-        for(i = 0; i < num; i++){
-            testString += one;
-        }
-
-        return !(testString.match(regex));
+        return num.length > 1 && !(num.match(regex));
     }
-    , counter = 0
+    , counter = '1'
     , primeCount = 0;
 
 // Start reading from stdin so we don't exit.
@@ -22,11 +16,11 @@ while(true){
     }
 
     if(primeCount === 1000){
-        process.stdout.write('Current Max Prime!: ' + counter + '\n');
+        process.stdout.write('Current Max Prime!: ' + counter.length + '\n');
         primeCount = 0;
     }
 
-    counter++;
+    counter += '1';
 }
 
 // process.on('SIGINT', function() {
