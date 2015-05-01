@@ -37,3 +37,8 @@ while(true){
 
 //     process.exit();
 // });
+process.on('SIGINT', function () {
+    'use strict';
+
+    console.log('Primes found: ' + primeCount);
+});
