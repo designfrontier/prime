@@ -12,10 +12,17 @@ var primeRegex = /^1?$|^(11+?)\1+$/
         }
     }
     , counter = '1'
+    , addString = '1'
     , primeCount = 0
     , startTime = new Date()
-    , timeToPrime
-    , addString = '1'
+
+    , outputToScreen = function (timeToPrime, num) {
+        'use strict';
+
+        return function () {
+            process.stdout.write('Current Max Prime!: ' + num + ' in ' + timeToPrime + ' ms\n');
+        };
+    }
 
     , findPrime = function () {
         'use strict';
@@ -29,14 +36,13 @@ var primeRegex = /^1?$|^(11+?)\1+$/
         }
 
         if(primeCount === 1000){
-            timeToPrime = new Date().getTime() - startTime.getTime();
-            process.stdout.write('Current Max Prime!: ' + counter.length + ' in ' + timeToPrime + 'ms\n');
             primeCount = 0;
+            process.nextTick(outputToScreen(new Date().getTime() - startTime.getTime(), counter.length));
         }
 
         counter += addString;
 
-        findPrime();
+        process.nextTick(findPrime);
     };
 
 findPrime();
