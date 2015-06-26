@@ -15,11 +15,17 @@ var primeRegex = /^1?$|^(11+?)\1+$/
     , primeCount = 0
     , startTime = new Date()
     , timeToPrime
+    , addString = '1'
+
     , findPrime = function () {
         'use strict';
 
         if(isPrime(counter, primeRegex)){
             primeCount++;
+        }
+
+        if(counter.length === 3) {
+            addString = '11';
         }
 
         if(primeCount === 1000){
@@ -28,7 +34,7 @@ var primeRegex = /^1?$|^(11+?)\1+$/
             primeCount = 0;
         }
 
-        counter += '1';
+        counter += addString;
 
         findPrime();
     };
