@@ -1,14 +1,20 @@
 var primeRegex = /^1?$|^(11+?)\1+$/
     , isPrime = function (num, regex) {
         'use strict';
+        var len = num.length;
 
-        return num.length > 1 && !(num.match(regex));
+        if(len === 2){
+            return true;
+        } else if(len % 2 === 0){
+            return false;
+        } else {
+            return len > 1 && !num.match(regex);
+        }
     }
     , counter = '1'
-    , primeCount = 0;
-
-// Start reading from stdin so we don't exit.
-// process.stdin.resume();
+    , primeCount = 0
+    , startTime = new Date()
+    , timeToPrime;
 
 while(true){
     if(isPrime(counter, primeRegex)){
@@ -16,29 +22,10 @@ while(true){
     }
 
     if(primeCount === 1000){
-        process.stdout.write('Current Max Prime!: ' + counter.length + '\n');
+        timeToPrime = new Date().getTime() - startTime.getTime();
+        process.stdout.write('Current Max Prime!: ' + counter.length + ' in ' + timeToPrime + 'ms\n');
         primeCount = 0;
     }
 
     counter += '1';
 }
-
-// process.on('SIGINT', function() {
-//   process.stdout.write('Got SIGINT.  Press Control-D to exit.');
-// });
-
-// process.on('SIGINT', function(){
-//     var str = ' is not prime';
-
-//     if(isPrime(counter, primeRegex)){
-//         str = ' is prime';
-//     }
-//     console.log('last number checked: ' + counter + str);
-
-//     process.exit();
-// });
-process.on('SIGINT', function () {
-    'use strict';
-
-    console.log('Primes found: ' + primeCount);
-});
