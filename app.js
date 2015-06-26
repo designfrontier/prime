@@ -14,18 +14,23 @@ var primeRegex = /^1?$|^(11+?)\1+$/
     , counter = '1'
     , primeCount = 0
     , startTime = new Date()
-    , timeToPrime;
+    , timeToPrime
+    , findPrime = function () {
+        'use strict';
 
-while(true){
-    if(isPrime(counter, primeRegex)){
-        primeCount++;
-    }
+        if(isPrime(counter, primeRegex)){
+            primeCount++;
+        }
 
-    if(primeCount === 1000){
-        timeToPrime = new Date().getTime() - startTime.getTime();
-        process.stdout.write('Current Max Prime!: ' + counter.length + ' in ' + timeToPrime + 'ms\n');
-        primeCount = 0;
-    }
+        if(primeCount === 1000){
+            timeToPrime = new Date().getTime() - startTime.getTime();
+            process.stdout.write('Current Max Prime!: ' + counter.length + ' in ' + timeToPrime + 'ms\n');
+            primeCount = 0;
+        }
 
-    counter += '1';
-}
+        counter += '1';
+
+        findPrime();
+    };
+
+findPrime();
