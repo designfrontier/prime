@@ -1,48 +1,35 @@
-var primeRegex = /^1?$|^(11+?)\1+$/
-    , isPrime = function (num, regex) {
-        'use strict';
-        var len = num.length;
+'use strict';
 
-        if(len === 2){
-            return true;
-        } else if(len % 2 === 0){
-            return false;
-        } else {
-            return len > 1 && !num.match(regex);
-        }
-    }
-    , counter = '1'
-    , addString = '1'
-    , primeCount = 0
-    , startTime = new Date()
+let maxPrime = 3;
 
-    , outputToScreen = function (timeToPrime, num) {
-        'use strict';
-
-        return function () {
-            process.stdout.write('Current Max Prime!: ' + num + ' in ' + timeToPrime + ' ms\n');
-        };
-    }
-
-    , findPrime = function () {
-        'use strict';
-
-        if(isPrime(counter, primeRegex)){
-            primeCount++;
-        }
-
-        if(counter.length === 3) {
-            addString = '11';
-        }
-
-        if(primeCount === 1000){
-            primeCount = 0;
-            process.nextTick(outputToScreen(new Date().getTime() - startTime.getTime(), counter.length));
-        }
-
-        counter += addString;
-
-        process.nextTick(findPrime);
+const cp = require('child_process')
+    , childCount = 10
+    , childStore = []
+    , primeStore = [ 2, 3 ]
+    , killChildren = () => {
+        childStore.forEach((child) => {
+            child.kill();
+        });
     };
 
-findPrime();
+childStore.length = childCount;
+childStore.fill(1);
+
+childStore.forEach((item, index) => {
+    const child = cp.fork('./minion', [ 20, 5 + (index * 2) ]);
+
+    child.on('message', (obj) => {
+        primeStore.push(obj.prime);
+        maxPrime = obj.prime > maxPrime ? obj.prime : maxPrime;
+
+        if (primeStore.length === 2000) {
+            process.stdout.write(`${maxPrime}`);
+            killChildren();
+            process.exit();
+        }
+    });
+
+    childStore[index] = child;
+});
+
+process.stdin.resume();
